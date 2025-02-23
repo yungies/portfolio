@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-color: #00ff9d;
+            --background-color: #0a0a0a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--accent-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .welcome-container {
+            position: relative;
+            text-align: center;
+            perspective: 1000px;
+        }
+
+        .animated-text {
+            position: relative;
+            height: 120px;
+            overflow: visible;
+        }
+
+        .hello-text {
+            font-size: 4.5rem;
+            font-weight: 700;
+            position: absolute;
+            left: 50%;
+            opacity: 0;
+            transform: translateX(-50%) rotateX(90deg) scale(0.8);
+            filter: blur(8px);
+            transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+            text-shadow: 0 0 15px rgba(0, 255, 157, 0.4);
+        }
+
+        .hello-text.active {
+            opacity: 1;
+            transform: translateX(-50%) rotateX(0deg) scale(1);
+            filter: blur(0);
+        }
+
+        .hello-text.exiting {
+            opacity: 0;
+            transform: translateX(-50%) rotateY(90deg) scale(1.2);
+            filter: blur(12px);
+        }
+
+        .background-pattern {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background-image: radial-gradient(circle at center,
+                    rgba(0, 255, 157, 0.05) 0%,
+                    transparent 70%);
+            z-index: -1;
+            animation: pulse 8s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-pattern"></div>
+    <div class="welcome-container">
+        <div class="animated-text">
+            <div class="hello-text">Hello</div>
+            <div class="hello-text">Bonjour</div>
+            <div class="hello-text">Hola</div>
+            <div class="hello-text">Ciao</div>
+            <div class="hello-text">Konnichiwa</div>
+            <div class="hello-text">Olá</div>
+        </div>
+    </div>
+
+    <script>
+        const texts = document.querySelectorAll('.hello-text');
+        const animationDuration = 700;
+        const totalDuration = (texts.length + 1) * animationDuration;
+        let currentIndex = 0;
+    
+        function animateText() {
+            // Remove previous active classes
+            texts.forEach(text => {
+                text.classList.remove('active', 'exiting');
+            });
+    
+            // Add exiting animation to previous element
+            if (currentIndex > 0) {
+                texts[currentIndex - 1].classList.add('exiting');
+            }
+    
+            // Activate current text
+            texts[currentIndex].classList.add('active');
+            currentIndex++;
+    
+            if (currentIndex >= texts.length) {
+                setTimeout(() => {
+                    // Redirect to index.html after animation
+                    window.location.href = 'index.html';
+                }, animationDuration * 2);
+                return;
+            }
+    
+            setTimeout(animateText, animationDuration);
+        }
+    
+        // Start animation sequence
+        setTimeout(animateText, 1000);
+    
+        // Force redirect after total duration as fallback
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, totalDuration);
+    </script>
+
+</body>
+
+</html>
